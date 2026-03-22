@@ -171,8 +171,7 @@ _symfony-init:
 	else \
 		echo ">>> Creating Symfony project (symfony/skeleton + webapp)..."; \
 		$(PHP) composer create-project symfony/skeleton /tmp/symfony-install --no-interaction --prefer-dist; \
-		$(PHP) bash -c 'cp -rn /tmp/symfony-install/. /var/www/html/ && rm -rf /tmp/symfony-install'; \
-		$(PHP) bash -c 'rm -f /var/www/html/compose.yaml /var/www/html/docker-compose.yml /var/www/html/docker-compose.yaml'; \
+		$(PHP) bash -c 'rm -f /tmp/symfony-install/compose.yaml /tmp/symfony-install/docker-compose.yml /tmp/symfony-install/docker-compose.yaml && cp -rn /tmp/symfony-install/. /var/www/html/ && rm -rf /tmp/symfony-install'; \
 		echo ">>> Installing webapp pack (Twig, Doctrine, Security, Mailer...)..."; \
 		$(PHP) composer require webapp --no-interaction; \
 	fi
