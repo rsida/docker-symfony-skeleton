@@ -172,11 +172,11 @@ _symfony-init:
 		echo ">>> Creating Symfony project (symfony/skeleton + webapp)..."; \
 		$(PHP) composer create-project symfony/skeleton /tmp/symfony-install --no-interaction --prefer-dist; \
 		$(PHP) bash -c 'rm -f /tmp/symfony-install/compose.yaml /tmp/symfony-install/docker-compose.yml /tmp/symfony-install/docker-compose.yaml && cp -rn /tmp/symfony-install/. /var/www/html/ && rm -rf /tmp/symfony-install'; \
+		echo ">>> Writing .env.local..."; \
+		$(PHP) bash -c 'cat > /var/www/html/.env.local <<EOF\nAPP_ENV=dev\nAPP_SECRET=$$APP_SECRET\nDATABASE_URL=mysql://$$DB_USER:$$DB_PASSWORD@mariadb:3306/$$DB_NAME?serverVersion=mariadb-11.0.0&charset=utf8mb4\nMAILER_DSN=smtp://mailer:1025\nDEFAULT_URI=https://$$APP_DOMAIN\nEOF'; \
 		echo ">>> Installing webapp pack (Twig, Doctrine, Security, Mailer...)..."; \
 		$(PHP) composer require webapp --no-interaction; \
 	fi
-	@echo ">>> Writing .env.local..."
-	@$(PHP) bash -c 'cat > /var/www/html/.env.local <<EOF\nAPP_ENV=dev\nAPP_SECRET=$$APP_SECRET\nDATABASE_URL=mysql://$$DB_USER:$$DB_PASSWORD@mariadb:3306/$$DB_NAME?serverVersion=mariadb-11.0.0&charset=utf8mb4\nMAILER_DSN=smtp://mailer:1025\nEOF'
 	@echo ">>> Running database migrations..."
 	$(PHP) php bin/console doctrine:database:create --if-not-exists
 	$(PHP) php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
@@ -189,7 +189,7 @@ _symfony-setup:
 	$(PHP) composer install --no-interaction
 	@if [ ! -f .env.local ]; then \
 		echo ">>> Writing .env.local..."; \
-		$(PHP) bash -c 'cat > /var/www/html/.env.local <<EOF\nAPP_ENV=dev\nAPP_SECRET=$$APP_SECRET\nDATABASE_URL=mysql://$$DB_USER:$$DB_PASSWORD@mariadb:3306/$$DB_NAME?serverVersion=mariadb-11.0.0&charset=utf8mb4\nMAILER_DSN=smtp://mailer:1025\nEOF'; \
+		$(PHP) bash -c 'cat > /var/www/html/.env.local <<EOF\nAPP_ENV=dev\nAPP_SECRET=$$APP_SECRET\nDATABASE_URL=mysql://$$DB_USER:$$DB_PASSWORD@mariadb:3306/$$DB_NAME?serverVersion=mariadb-11.0.0&charset=utf8mb4\nMAILER_DSN=smtp://mailer:1025\nDEFAULT_URI=https://$$APP_DOMAIN\nEOF'; \
 	fi
 	@echo ">>> Running database migrations..."
 	$(PHP) php bin/console doctrine:database:create --if-not-exists
