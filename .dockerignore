@@ -1,0 +1,8 @@
+.git
+.env
+.env.local
+vendor/
+var/cache/
+var/log/
+node_modules/
+*.md
